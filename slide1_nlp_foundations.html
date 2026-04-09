@@ -1,0 +1,326 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.slide-header { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; border: 0.5px solid var(--color-border-tertiary); }
+.slide-num { font-size: 11px; font-weight: 500; color: #1D9E75; background: #E1F5EE; padding: 3px 8px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+.slide-header h1 { font-size: 20px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; }
+.slide-header p { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; line-height: 1.5; }
+.time-badge { font-size: 11px; color: #185FA5; background: #E6F1FB; padding: 3px 8px; border-radius: 20px; margin-top: 6px; display: inline-block; }
+
+/* Tab nav */
+.tab-bar { display: flex; gap: 0; margin-bottom: 1.25rem; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.tab-btn { flex: 1; padding: 10px 8px; font-size: 12px; font-weight: 500; background: transparent; border: none; border-right: 0.5px solid var(--color-border-secondary); cursor: pointer; color: var(--color-text-secondary); font-family: var(--font-sans); transition: all 0.15s; line-height: 1.4; text-align: center; }
+.tab-btn:last-child { border-right: none; }
+.tab-btn:hover { background: var(--color-background-secondary); }
+.tab-btn.active { background: #1D9E75; color: #fff; }
+.tab-btn .tab-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+
+/* Panels */
+.panel { display: none; animation: fi 0.2s ease; }
+.panel.active { display: block; }
+@keyframes fi { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+
+/* Cards */
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+.card h3 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; }
+.card p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; }
+.card ul { padding-left: 1rem; }
+.card li { font-size: 13px; color: var(--color-text-secondary); line-height: 1.8; }
+
+.a-teal { border-left: 3px solid #1D9E75; }
+.a-blue { border-left: 3px solid #378ADD; }
+.a-purple { border-left: 3px solid #7F77DD; }
+.a-amber { border-left: 3px solid #EF9F27; }
+.a-coral { border-left: 3px solid #D85A30; }
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+.intro-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.8; margin-bottom: 1.25rem; padding: 1rem 1.25rem; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); }
+.intro-text strong { font-weight: 500; color: var(--color-text-primary); }
+
+/* Pipeline viz */
+.pipeline { display: flex; align-items: stretch; gap: 0; margin-bottom: 1.25rem; border-radius: var(--border-radius-lg); overflow: hidden; border: 0.5px solid var(--color-border-secondary); }
+.pipe-stage { flex: 1; padding: 12px 10px; text-align: center; position: relative; }
+.pipe-stage::after { content: '→'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--color-text-tertiary); z-index: 2; }
+.pipe-stage:last-child::after { display: none; }
+.ps-upstream { background: #E1F5EE; }
+.ps-upstream .ps-label { color: #0F6E56; }
+.ps-upstream .ps-title { color: #085041; }
+.ps-mid { background: #E6F1FB; }
+.ps-mid .ps-label { color: #185FA5; }
+.ps-mid .ps-title { color: #0C447C; }
+.ps-downstream { background: #EEEDFE; }
+.ps-downstream .ps-label { color: #534AB7; }
+.ps-downstream .ps-title { color: #26215C; }
+.ps-llm { background: #FAEEDA; }
+.ps-llm .ps-label { color: #854F0B; }
+.ps-llm .ps-title { color: #412402; }
+.ps-label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.ps-title { font-size: 12px; font-weight: 500; line-height: 1.3; }
+.ps-examples { font-size: 11px; margin-top: 4px; opacity: 0.8; line-height: 1.4; }
+
+/* Token animation */
+.token-demo { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; border: 0.5px solid var(--color-border-tertiary); }
+.token-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 4px; }
+.token { padding: 4px 10px; border-radius: var(--border-radius-md); font-size: 13px; font-family: var(--font-mono); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
+.token-word { font-size: 13px; }
+.token-tag { font-size: 10px; font-weight: 500; }
+.t-noun { background: #E1F5EE; border-color: #5DCAA5; color: #085041; }
+.t-noun .token-tag { color: #1D9E75; }
+.t-verb { background: #E6F1FB; border-color: #85B7EB; color: #0C447C; }
+.t-verb .token-tag { color: #378ADD; }
+.t-adj { background: #EEEDFE; border-color: #AFA9EC; color: #26215C; }
+.t-adj .token-tag { color: #7F77DD; }
+.t-punct { background: var(--color-background-secondary); border-color: var(--color-border-secondary); color: var(--color-text-tertiary); }
+.t-punct .token-tag { color: var(--color-text-tertiary); }
+
+/* Evolution timeline */
+.timeline { position: relative; margin-bottom: 12px; }
+.tl-item { display: flex; gap: 16px; margin-bottom: 12px; align-items: flex-start; }
+.tl-dot-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.tl-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+.tl-line { width: 1px; flex: 1; min-height: 20px; background: var(--color-border-secondary); margin-top: 4px; }
+.tl-body { flex: 1; padding-bottom: 4px; }
+.tl-era { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.tl-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+.tl-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+.td-gray { background: #D3D1C7; color: #2C2C2A; }
+.td-blue { background: #B5D4F4; color: #042C53; }
+.td-teal { background: #9FE1CB; color: #04342C; }
+.td-amber { background: #FAC775; color: #412402; }
+.era-gray { color: #5F5E5A; }
+.era-blue { color: #185FA5; }
+.era-teal { color: #0F6E56; }
+.era-amber { color: #854F0B; }
+
+.big-quote { background: #EEEDFE; border-left: 4px solid #7F77DD; padding: 1rem 1.25rem; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; margin-bottom: 12px; }
+.big-quote p { font-size: 14px; color: #26215C; line-height: 1.7; font-weight: 500; }
+.big-quote span { font-size: 12px; color: #534AB7; margin-top: 6px; display: block; }
+
+.activity-box { background: #FAEEDA; border: 0.5px solid #EF9F27; border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+.activity-box h3 { font-size: 13px; font-weight: 500; color: #854F0B; margin-bottom: 6px; }
+.activity-box p { font-size: 13px; color: #633806; line-height: 1.6; }
+
+.pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin: 2px; font-weight: 500; }
+.p-teal { background: #E1F5EE; color: #0F6E56; }
+.p-blue { background: #E6F1FB; color: #185FA5; }
+.p-purple { background: #EEEDFE; color: #534AB7; }
+.p-amber { background: #FAEEDA; color: #854F0B; }
+
+@media (max-width: 560px) {
+  .g2, .g3 { grid-template-columns: 1fr; }
+  .pipeline { flex-direction: column; }
+  .pipe-stage::after { display: none; }
+  .tab-btn .tab-icon { display: none; }
+}
+</style>
+
+<h2 class="sr-only">Slide 1: From upstream NLP to downstream tasks to large language models — foundational concepts for BBA students</h2>
+
+<div class="slide-header">
+  <div class="slide-num">Slide 1 of 11</div>
+  <h1>From text to insight: upstream tasks, downstream tasks, and how LLMs changed everything</h1>
+  <p>A practical mental model of how NLP is structured — and why it matters for business</p>
+  <div class="time-badge">0–6 min · Conceptual foundation</div>
+</div>
+
+<!-- Pipeline overview always visible -->
+<div class="pipeline">
+  <div class="pipe-stage ps-upstream">
+    <div class="ps-label">Layer 1</div>
+    <div class="ps-title">Upstream tasks</div>
+    <div class="ps-examples">Tokenisation · POS tagging · Embeddings</div>
+  </div>
+  <div class="pipe-stage ps-mid">
+    <div class="ps-label">Bridges the two</div>
+    <div class="ps-title">Feature representation</div>
+    <div class="ps-examples">Word vectors · Syntax trees</div>
+  </div>
+  <div class="pipe-stage ps-downstream">
+    <div class="ps-label">Layer 2</div>
+    <div class="ps-title">Downstream tasks</div>
+    <div class="ps-examples">Sentiment · NER · Summarisation</div>
+  </div>
+  <div class="pipe-stage ps-llm">
+    <div class="ps-label">Today</div>
+    <div class="ps-title">LLMs</div>
+    <div class="ps-examples">One model · All tasks · Plain English</div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(0)"><span class="tab-icon">🧱</span>Upstream tasks</button>
+  <button class="tab-btn" onclick="switchTab(1)"><span class="tab-icon">🎯</span>Downstream tasks</button>
+  <button class="tab-btn" onclick="switchTab(2)"><span class="tab-icon">🚀</span>Evolution to LLMs</button>
+</div>
+
+<!-- Panel 0: Upstream -->
+<div class="panel active" id="p0">
+  <div class="intro-text">
+    Before a computer can understand what a sentence <strong>means</strong>, it first has to understand what it <strong>is</strong>. Upstream tasks are the foundational processing steps that happen behind the scenes — the grammar and vocabulary layer that every NLP application depends on, even though users never see them.
+  </div>
+
+  <div class="token-demo">
+    <div style="font-size:12px; color:var(--color-text-secondary); margin-bottom:2px;">Part-of-speech tagging in action — each word gets labelled before any analysis can begin</div>
+    <div style="font-size:13px; color:var(--color-text-secondary); margin-bottom:6px;">Input sentence: <em style="color:var(--color-text-primary);">"The customer review was extremely positive."</em></div>
+    <div class="token-row">
+      <div class="token t-noun"><span class="token-word">The</span><span class="token-tag">DET</span></div>
+      <div class="token t-noun"><span class="token-word">customer</span><span class="token-tag">NOUN</span></div>
+      <div class="token t-noun"><span class="token-word">review</span><span class="token-tag">NOUN</span></div>
+      <div class="token t-verb"><span class="token-word">was</span><span class="token-tag">VERB</span></div>
+      <div class="token t-adj"><span class="token-word">extremely</span><span class="token-tag">ADV</span></div>
+      <div class="token t-adj"><span class="token-word">positive</span><span class="token-tag">ADJ</span></div>
+      <div class="token t-punct"><span class="token-word">.</span><span class="token-tag">PUNCT</span></div>
+    </div>
+    <div style="font-size:12px; color:var(--color-text-secondary); margin-top:6px;">Only after this step can the downstream model know that <em>positive</em> is the sentiment-bearing adjective — not <em>customer</em> or <em>review</em>.</div>
+  </div>
+
+  <div class="g3">
+    <div class="card a-teal">
+      <h3>Tokenisation</h3>
+      <p>Splitting raw text into individual units — words, subwords, or sentences — so the computer has something to work with.</p>
+      <p style="margin-top:6px; font-size:12px;">"I love NLP!" → ["I", "love", "NLP", "!"]</p>
+    </div>
+    <div class="card a-blue">
+      <h3>Part-of-speech tagging</h3>
+      <p>Labelling each token as a noun, verb, adjective, etc. Tells the model the grammatical role of every word before meaning is inferred.</p>
+    </div>
+    <div class="card a-purple">
+      <h3>Word embeddings</h3>
+      <p>Converting words into numbers (vectors) that capture semantic similarity. "King" and "Queen" end up numerically close. Text becomes maths.</p>
+    </div>
+  </div>
+
+  <div class="card a-amber">
+    <h3>The analogy that works in a classroom</h3>
+    <p>Upstream tasks are like teaching a child to read, spell, and understand grammar — before you ever ask them to write an essay, give a speech, or read a contract. The foundational skills are invisible in the finished product, but nothing works without them.</p>
+  </div>
+</div>
+
+<!-- Panel 1: Downstream -->
+<div class="panel" id="p1">
+  <div class="intro-text">
+    Downstream tasks are the practical, user-facing applications that make NLP useful in the real world. They take the structured output of upstream processing and turn it into something a manager can actually act on. If upstream tasks are the building blocks, downstream tasks are the finished products — the applications that directly solve user problems.
+  </div>
+
+  <div class="g2">
+    <div class="card a-teal">
+      <h3>Sentiment analysis</h3>
+      <p style="margin-bottom:6px;">Classifies text as positive, negative, or neutral. Uses the adjectives and adverbs identified upstream to score emotional tone.</p>
+      <div class="pill p-teal">Customer reviews</div>
+      <div class="pill p-teal">Brand monitoring</div>
+      <div class="pill p-teal">HR surveys</div>
+    </div>
+    <div class="card a-blue">
+      <h3>Named entity recognition</h3>
+      <p style="margin-bottom:6px;">Extracts people, organisations, locations, and dates automatically from unstructured text at scale.</p>
+      <div class="pill p-blue">Contracts</div>
+      <div class="pill p-blue">Financial news</div>
+      <div class="pill p-blue">Resumes</div>
+    </div>
+    <div class="card a-purple">
+      <h3>Text summarisation</h3>
+      <p style="margin-bottom:6px;">Condenses long documents into short, actionable briefs — either by extracting key sentences or generating new ones.</p>
+      <div class="pill p-purple">Reports</div>
+      <div class="pill p-purple">Meeting notes</div>
+      <div class="pill p-purple">Research papers</div>
+    </div>
+    <div class="card a-amber">
+      <h3>Text classification</h3>
+      <p style="margin-bottom:6px;">Routes incoming text into predefined categories automatically — support tickets, spam, risk flags, complaint types.</p>
+      <div class="pill p-amber">Support tickets</div>
+      <div class="pill p-amber">Spam detection</div>
+      <div class="pill p-amber">Compliance</div>
+    </div>
+  </div>
+
+  <div class="big-quote">
+    <p>"Without downstream tasks, NLP would remain a theoretical field. These are the applications that turn linguistic structure into business decisions — and they are what every technique in this course is built to deliver."</p>
+    <span>Every notebook in the opendata-education/TextAnalytics repo is a downstream task. The upstream layer is already handled for you.</span>
+  </div>
+</div>
+
+<!-- Panel 2: LLMs -->
+<div class="panel" id="p2">
+  <div class="intro-text">
+    For decades, each downstream task required its own custom-built system. The shift to large language models changed that: a single model, trained once at enormous scale, can now perform almost any downstream task simply by being given the right instructions in plain English. That shift is what makes this moment in NLP genuinely different from everything that came before.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot-col">
+        <div class="tl-dot td-gray">1</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-era era-gray">1980s – 2000s</div>
+        <div class="tl-title">Rule-based systems</div>
+        <div class="tl-desc">Engineers hand-wrote explicit rules: "if the email contains 'free money', label it spam." Worked for narrow, stable domains. Broke immediately when language evolved or context changed. Required constant human maintenance.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot-col">
+        <div class="tl-dot td-blue">2</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-era era-blue">2000s – 2017</div>
+        <div class="tl-title">Statistical machine learning</div>
+        <div class="tl-desc">Models learned patterns from labelled data rather than rules. Each downstream task still needed its own model trained from scratch. Powerful but expensive — large datasets required for every new application.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot-col">
+        <div class="tl-dot td-teal">3</div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-era era-teal">2017 – 2022</div>
+        <div class="tl-title">Pre-trained transformers (BERT, GPT-2, T5)</div>
+        <div class="tl-desc">Models pre-trained on billions of words of internet text, then fine-tuned on small task-specific datasets. Transfer learning meant that a model trained on general language could be adapted to legal, medical, or financial text with far less data. The upstream/downstream distinction became explicit in model architecture.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot-col">
+        <div class="tl-dot td-amber">4</div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-era era-amber">2022 – present</div>
+        <div class="tl-title">Large language models — one model, all tasks</div>
+        <div class="tl-desc">ChatGPT, Claude, Gemini, and Copilot collapsed the distinction between tasks. You no longer deploy a sentiment model, a summarisation model, and a classification model separately. You write a prompt — and the same model does all three. The bottleneck shifted from building the model to instructing it well.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card a-teal">
+      <h3>What stayed the same</h3>
+      <p>The downstream tasks themselves — sentiment analysis, NER, summarisation, classification — did not change. LLMs just became a faster, more flexible way to perform them. Understanding what a downstream task <em>is</em> still matters, because it tells you what to ask for.</p>
+    </div>
+    <div class="card a-amber">
+      <h3>What changed for business users</h3>
+      <p>The barrier moved from <em>can we build this?</em> to <em>can we instruct this well?</em> Prompt engineering — writing clear, specific, structured instructions — is now the primary skill separating useful AI output from generic noise.</p>
+    </div>
+  </div>
+
+  <div class="activity-box">
+    <h3>Opening question for the room</h3>
+    <p>Think of one task at work or university that involves reading a lot of text and pulling out specific information. Which downstream task category does that fall into — classification, extraction, summarisation, or generation? And could you describe that task clearly enough for an AI to do it for you?</p>
+  </div>
+</div>
+
+<script>
+function switchTab(n) {
+  document.querySelectorAll('.panel').forEach((p, i) => {
+    p.classList.toggle('active', i === n);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === n);
+  });
+}
+</script>
